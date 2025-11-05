@@ -11,8 +11,13 @@ import java.util.List;
 public class TeacherServiceImpl implements TeacherServiceInterface {
 
     //YOUR CODE STARTS HERE
+    TeacherDao teacherDao;
 
-
+    @Autowired
+    public TeacherServiceImpl(TeacherDao teacherDao)
+    {
+        this.teacherDao = teacherDao;
+    }
     //YOUR CODE ENDS HERE
 
     public List<Teacher> getAllTeachers() {

@@ -8,7 +8,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+//import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+//import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import java.util.List;
 
@@ -91,6 +92,7 @@ public class CourseDaoImplTests {
         String sql = "Select count(student_id) from course_student where course_id = 7";
         int studentCount = jdbcTemplate.queryForObject(sql, Integer.class);
         assertEquals(4, studentCount);
+        courseDao.deleteAllStudentsFromCourse(7);
         studentCount = jdbcTemplate.queryForObject(sql, Integer.class);
         assertEquals(0, studentCount);
     }
