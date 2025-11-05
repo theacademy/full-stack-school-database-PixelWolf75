@@ -27,7 +27,7 @@ public class StudentDaoImpl implements StudentDao {
     @Transactional
     public Student createNewStudent(Student student) {
         //YOUR CODE STARTS HERE
-
+        final String sql = "INSERT INTO student (fName, lName) VALUES (?, ?);";
 
         return null;
 

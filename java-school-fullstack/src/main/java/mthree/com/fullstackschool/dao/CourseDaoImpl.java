@@ -21,7 +21,7 @@ public class CourseDaoImpl implements CourseDao {
     @Override
     public Course createNewCourse(Course course) {
         //YOUR CODE STARTS HERE
-
+        final String sql = "INSERT INTO course (courseCode, courseDesc, teacherId) VALUES (?, ?, ?);";
 
         return null;
 

@@ -22,6 +22,7 @@ public class TeacherDaoImpl implements TeacherDao {
     @Override
     public Teacher createNewTeacher(Teacher teacher) {
         //YOUR CODE STARTS HERE
+        final String sql = "INSERT INTO todo (tFName, tLName, dept) VALUES (?, ?, ?);";
 
         return null;
 
