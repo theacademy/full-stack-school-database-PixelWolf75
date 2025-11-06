@@ -24,7 +24,7 @@ public class StudentServiceImpl implements StudentServiceInterface {
     public List<Student> getAllStudents() {
         //YOUR CODE STARTS HERE
 
-        return null;
+        return this.studentDao.getAllStudents();
 
         //YOUR CODE ENDS HERE
     }
@@ -32,7 +32,7 @@ public class StudentServiceImpl implements StudentServiceInterface {
     public Student getStudentById(int id) {
         //YOUR CODE STARTS HERE
 
-        return null;
+        return this.studentDao.findStudentById(id);
 
         //YOUR CODE ENDS HERE
     }
@@ -40,7 +40,7 @@ public class StudentServiceImpl implements StudentServiceInterface {
     public Student addNewStudent(Student student) {
         //YOUR CODE STARTS HERE
 
-        return null;
+        return this.studentDao.createNewStudent(student);
 
         //YOUR CODE ENDS HERE
     }
@@ -48,7 +48,13 @@ public class StudentServiceImpl implements StudentServiceInterface {
     public Student updateStudentData(int id, Student student) {
         //YOUR CODE STARTS HERE
 
-        return null;
+        Student studentToUpdate = this.studentDao.findStudentById(id);
+        if (studentToUpdate == null)
+        {
+            return null;
+        }
+        this.studentDao.updateStudent(student);
+        return this.studentDao.findStudentById(id);
 
         //YOUR CODE ENDS HERE
     }
@@ -56,7 +62,7 @@ public class StudentServiceImpl implements StudentServiceInterface {
     public void deleteStudentById(int id) {
         //YOUR CODE STARTS HERE
 
-
+        this.studentDao.deleteStudent(id);
 
         //YOUR CODE ENDS HERE
     }
@@ -64,7 +70,7 @@ public class StudentServiceImpl implements StudentServiceInterface {
     public void deleteStudentFromCourse(int studentId, int courseId) {
         //YOUR CODE STARTS HERE
 
-
+        this.studentDao.addStudentToCourse(studentId, courseId);
 
         //YOUR CODE ENDS HERE
     }
@@ -72,6 +78,7 @@ public class StudentServiceImpl implements StudentServiceInterface {
     public void addStudentToCourse(int studentId, int courseId) {
         //YOUR CODE STARTS HERE
 
+        this.studentDao.deleteStudentFromCourse(studentId, courseId);
 
         //YOUR CODE ENDS HERE
     }

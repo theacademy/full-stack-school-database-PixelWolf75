@@ -23,7 +23,7 @@ public class TeacherServiceImpl implements TeacherServiceInterface {
     public List<Teacher> getAllTeachers() {
         //YOUR CODE STARTS HERE
 
-        return null;
+        return this.teacherDao.getAllTeachers();
 
         //YOUR CODE ENDS HERE
     }
@@ -31,8 +31,7 @@ public class TeacherServiceImpl implements TeacherServiceInterface {
     public Teacher getTeacherById(int id) {
         //YOUR CODE STARTS HERE
 
-
-            return null;
+        return this.teacherDao.findTeacherById(id);
 
         //YOUR CODE ENDS HERE
     }
@@ -40,8 +39,7 @@ public class TeacherServiceImpl implements TeacherServiceInterface {
     public Teacher addNewTeacher(Teacher teacher) {
         //YOUR CODE STARTS HERE
 
-
-        return null;
+        return this.teacherDao.createNewTeacher(teacher);
 
         //YOUR CODE ENDS HERE
     }
@@ -49,8 +47,14 @@ public class TeacherServiceImpl implements TeacherServiceInterface {
     public Teacher updateTeacherData(int id, Teacher teacher) {
         //YOUR CODE STARTS HERE
 
-
-        return null;
+        Teacher teacherToUpdate = this.teacherDao.findTeacherById(id);
+        //No teacher found
+        if (teacherToUpdate == null)
+        {
+            return null;
+        }
+        this.teacherDao.updateTeacher(teacher);
+        return this.teacherDao.findTeacherById(id);
 
         //YOUR CODE ENDS HERE
     }
@@ -58,7 +62,7 @@ public class TeacherServiceImpl implements TeacherServiceInterface {
     public void deleteTeacherById(int id) {
         //YOUR CODE STARTS HERE
 
-
+        this.teacherDao.deleteTeacher(id);
 
         //YOUR CODE ENDS HERE
     }

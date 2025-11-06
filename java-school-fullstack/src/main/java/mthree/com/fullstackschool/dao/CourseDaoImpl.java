@@ -21,9 +21,12 @@ public class CourseDaoImpl implements CourseDao {
     @Override
     public Course createNewCourse(Course course) {
         //YOUR CODE STARTS HERE
-        final String sql = "INSERT INTO course (courseCode, courseDesc, teacherId) VALUES (?, ?, ?);";
 
-        return null;
+        final String SQL = "INSERT INTO course (courseCode, courseDesc, teacherId) VALUES (?, ?, ?);";
+        jdbcTemplate.update(SQL, course.getCourseName(), course.getCourseDesc(), course.getTeacherId());
+        int newId = jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID()", Integer.class);
+        course.setCourseId(newId);
+        return course;
 
         //YOUR CODE ENDS HERE
     }
@@ -32,8 +35,8 @@ public class CourseDaoImpl implements CourseDao {
     public List<Course> getAllCourses() {
         //YOUR CODE STARTS HERE
 
-
-        return null;
+        final String SQL = "SELECT * FROM course;";
+        return jdbcTemplate.query(SQL, new CourseMapper());
 
         //YOUR CODE ENDS HERE
     }
@@ -42,7 +45,8 @@ public class CourseDaoImpl implements CourseDao {
     public Course findCourseById(int id) {
         //YOUR CODE STARTS HERE
 
-        return null;
+        final String SQL = "SELECT * FROM course WHERE cid = ? ;";
+        return jdbcTemplate.queryForObject(SQL, new CourseMapper(), id);
 
         //YOUR CODE ENDS HERE
     }
@@ -51,7 +55,11 @@ public class CourseDaoImpl implements CourseDao {
     public void updateCourse(Course course) {
         //YOUR CODE STARTS HERE
 
-
+        final String SQL = "UPDATE course SET courseCode = ?, courseDesc = ?, teacherId = ?;";
+        jdbcTemplate.update(SQL,
+                course.getCourseName(),
+                course.getCourseDesc(),
+                course.getTeacherId());
 
         //YOUR CODE ENDS HERE
     }
@@ -60,7 +68,11 @@ public class CourseDaoImpl implements CourseDao {
     public void deleteCourse(int id) {
         //YOUR CODE STARTS HERE
 
-
+        final String SQL_DELETE_COURSE_STUDENT = "DELETE course_student FROM course_student cs "
+                + "JOIN student s ON cs.student_id = s.sid WHERE cs.course_id = ?;";
+        jdbcTemplate.update(SQL_DELETE_COURSE_STUDENT, id);
+        final String SQL_DELETE_COURSE = "DELETE FROM course WHERE cid = ?;";
+        jdbcTemplate.update(SQL_DELETE_COURSE, id);
 
         //YOUR CODE ENDS HERE
     }
@@ -69,7 +81,12 @@ public class CourseDaoImpl implements CourseDao {
     public void deleteAllStudentsFromCourse(int courseId) {
         //YOUR CODE STARTS HERE
 
-
+        final String SQL_DELETE_STUDENTS = "DELETE student FROM student JOIN course_student cs ON s.sid = cs.student_id "
+                + "WHERE cs.course_id = ? ;";
+        jdbcTemplate.update(SQL_DELETE_STUDENTS, courseId);
+        final String SQL_DELETE_COURSE_STUDENT = "DELETE cs.* FROM course_student cs "
+                + "JOIN student s ON cs.student_id = s.sid WHERE cs.course_id = ?;";
+        jdbcTemplate.update(SQL_DELETE_COURSE_STUDENT, courseId);
 
         //YOUR CODE ENDS HERE
     }

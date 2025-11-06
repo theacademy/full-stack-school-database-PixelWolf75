@@ -1,5 +1,6 @@
 package mthree.com.fullstackschool.dao;
 
+import mthree.com.fullstackschool.dao.mappers.StudentMapper;
 import mthree.com.fullstackschool.dao.mappers.TeacherMapper;
 import mthree.com.fullstackschool.model.Teacher;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -22,9 +23,12 @@ public class TeacherDaoImpl implements TeacherDao {
     @Override
     public Teacher createNewTeacher(Teacher teacher) {
         //YOUR CODE STARTS HERE
-        final String sql = "INSERT INTO todo (tFName, tLName, dept) VALUES (?, ?, ?);";
 
-        return null;
+        final String SQL = "INSERT INTO todo (tFName, tLName, dept) VALUES (?, ?, ?);";
+        jdbcTemplate.update(SQL, teacher.getTeacherFName(), teacher.getTeacherLName(), teacher.getDept());
+        int newId = jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID()", Integer.class);
+        teacher.setTeacherId(newId);
+        return teacher;
 
         //YOUR CODE ENDS HERE
     }
@@ -33,7 +37,8 @@ public class TeacherDaoImpl implements TeacherDao {
     public List<Teacher> getAllTeachers() {
         //YOUR CODE STARTS HERE
 
-        return null;
+        final String SQL = "SELECT * FROM teacher;";
+        return jdbcTemplate.query(SQL, new TeacherMapper());
 
         //YOUR CODE ENDS HERE
     }
@@ -42,7 +47,8 @@ public class TeacherDaoImpl implements TeacherDao {
     public Teacher findTeacherById(int id) {
         //YOUR CODE STARTS HERE
 
-        return null;
+        final String SQL = "SELECT * FROM teacher WHERE tid = ? ;";
+        return jdbcTemplate.queryForObject(SQL, new TeacherMapper(), id);
 
         //YOUR CODE ENDS HERE
     }
@@ -51,6 +57,11 @@ public class TeacherDaoImpl implements TeacherDao {
     public void updateTeacher(Teacher t) {
         //YOUR CODE STARTS HERE
 
+        final String SQL = "UPDATE teacher SET tFName = ?, tLName = ?, dept = ?;";
+        jdbcTemplate.update(SQL,
+                t.getTeacherFName(),
+                t.getTeacherLName(),
+                t.getDept());
 
         //YOUR CODE ENDS HERE
     }
@@ -59,6 +70,11 @@ public class TeacherDaoImpl implements TeacherDao {
     public void deleteTeacher(int id) {
         //YOUR CODE STARTS HERE
 
+        final String SQL_DELETE_COURSE = "DELETE course FROM course c "
+                + "JOIN teacher t ON c.teacherId = ?;";
+        jdbcTemplate.update(SQL_DELETE_COURSE, id);
+        final String SQL_DELETE_TEACHER = "DELETE FROM teacher WHERE tid = ?;";
+        jdbcTemplate.update(SQL_DELETE_TEACHER, id);
 
         //YOUR CODE ENDS HERE
     }

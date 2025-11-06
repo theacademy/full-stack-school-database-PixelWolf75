@@ -23,7 +23,7 @@ public class CourseServiceImpl implements CourseServiceInterface {
     public List<Course> getAllCourses() {
         //YOUR CODE STARTS HERE
 
-        return null;
+        return this.courseDao.getAllCourses();
 
         //YOUR CODE ENDS HERE
     }
@@ -31,7 +31,7 @@ public class CourseServiceImpl implements CourseServiceInterface {
     public Course getCourseById(int id) {
         //YOUR CODE STARTS HERE
 
-        return null;
+        return this.courseDao.findCourseById(id);
 
         //YOUR CODE ENDS HERE
     }
@@ -39,7 +39,7 @@ public class CourseServiceImpl implements CourseServiceInterface {
     public Course addNewCourse(Course course) {
         //YOUR CODE STARTS HERE
 
-        return null;
+        return this.courseDao.createNewCourse(course);
 
         //YOUR CODE ENDS HERE
     }
@@ -47,7 +47,13 @@ public class CourseServiceImpl implements CourseServiceInterface {
     public Course updateCourseData(int id, Course course) {
         //YOUR CODE STARTS HERE
 
-        return null;
+        Course courseToUpdate = this.courseDao.findCourseById(id);
+        if(courseToUpdate == null)
+        {
+            return null;
+        }
+        this.courseDao.updateCourse(course);
+        return this.courseDao.findCourseById(id);
 
         //YOUR CODE ENDS HERE
     }
@@ -55,7 +61,7 @@ public class CourseServiceImpl implements CourseServiceInterface {
     public void deleteCourseById(int id) {
         //YOUR CODE STARTS HERE
 
-
+        this.courseDao.deleteCourse(id);
 
         //YOUR CODE ENDS HERE
     }
