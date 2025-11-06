@@ -1,6 +1,7 @@
 package mthree.com.fullstackschool.service;
 
 import mthree.com.fullstackschool.dao.TeacherDao;
+import mthree.com.fullstackschool.model.Student;
 import mthree.com.fullstackschool.model.Teacher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -31,7 +32,17 @@ public class TeacherServiceImpl implements TeacherServiceInterface {
     public Teacher getTeacherById(int id) {
         //YOUR CODE STARTS HERE
 
-        return this.teacherDao.findTeacherById(id);
+        Teacher teacher = new Teacher();
+        try
+        {
+            teacher = this.teacherDao.findTeacherById(id);
+        }
+        catch (DataAccessException e)
+        {
+            teacher.setTeacherFName("Teacher Not Found");
+            teacher.setTeacherLName("Teacher Not Found");
+        }
+        return teacher;
 
         //YOUR CODE ENDS HERE
     }
@@ -39,7 +50,19 @@ public class TeacherServiceImpl implements TeacherServiceInterface {
     public Teacher addNewTeacher(Teacher teacher) {
         //YOUR CODE STARTS HERE
 
-        return this.teacherDao.createNewTeacher(teacher);
+        boolean fieldIsEmpty = false;
+        if (teacher.getTeacherFName().isEmpty())
+        {
+            fieldIsEmpty = true;
+            teacher.setTeacherFName("First Name blank, teacher NOT added");
+        }
+
+        if (teacher.getTeacherLName().isEmpty())
+        {
+            fieldIsEmpty = true;
+            teacher.setTeacherLName("Last Name blank, teacher NOT added");
+        }
+        return fieldIsEmpty ? teacher : this.teacherDao.createNewTeacher(teacher);
 
         //YOUR CODE ENDS HERE
     }
@@ -47,11 +70,19 @@ public class TeacherServiceImpl implements TeacherServiceInterface {
     public Teacher updateTeacherData(int id, Teacher teacher) {
         //YOUR CODE STARTS HERE
 
+        /*
         Teacher teacherToUpdate = this.teacherDao.findTeacherById(id);
         //No teacher found
         if (teacherToUpdate == null)
         {
             return null;
+        }
+         */
+        if (id != teacher.getTeacherId())
+        {
+            teacher.setTeacherFName("IDs do not match, teacher not updated");
+            teacher.setTeacherLName("IDs do not match, teacher not updated");
+            return teacher;
         }
         this.teacherDao.updateTeacher(teacher);
         return this.teacherDao.findTeacherById(id);
