@@ -6,6 +6,7 @@ import mthree.com.fullstackschool.model.Student;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,9 +31,20 @@ public class StudentDaoImpl implements StudentDao {
         //YOUR CODE STARTS HERE
 
         final String SQL = "INSERT INTO student (fName, lName) VALUES (?, ?);";
-        jdbcTemplate.update(SQL, student.getStudentFirstName(), student.getStudentLastName());
-        int newId = jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID()", Integer.class);
-        student.setStudentId(newId);
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update( conn -> {
+            PreparedStatement statement = conn.prepareStatement(SQL, Statement.RETURN_GENERATED_KEYS);
+            statement.setString(1, student.getStudentFirstName());
+            statement.setString(2, student.getStudentLastName());
+            return statement;
+        }, keyHolder);
+
+        Number newId = keyHolder.getKey();
+        if (newId != null)
+        {
+            student.setStudentId(newId.intValue());
+        }
         return student;
 
         //YOUR CODE ENDS HERE
@@ -74,8 +86,8 @@ public class StudentDaoImpl implements StudentDao {
     public void deleteStudent(int id) {
         //YOUR CODE STARTS HERE
 
-        final String SQL_DELETE_COURSE_STUDENT = "DELETE course_student FROM course_student cs "
-                + "JOIN course c ON cs.course_id = c.cid WHERE cs.student_id = ?;";
+        final String SQL_DELETE_COURSE_STUDENT = "DELETE FROM course_student "
+                + "WHERE course_id IN (SELECT cid FROM course) AND student_id = ?;";
         jdbcTemplate.update(SQL_DELETE_COURSE_STUDENT, id);
         final String SQL_DELETE_STUDENT = "DELETE FROM student WHERE sid = ?;";
         jdbcTemplate.update(SQL_DELETE_STUDENT, id);
@@ -97,8 +109,8 @@ public class StudentDaoImpl implements StudentDao {
     public void deleteStudentFromCourse(int studentId, int courseId) {
         //YOUR CODE STARTS HERE
 
-        final String SQL_DELETE_COURSE_STUDENT = "DELETE course_student FROM course_student cs "
-                + "JOIN course c ON cs.course_id = ? WHERE cs.student_id = ?;";
+        final String SQL_DELETE_COURSE_STUDENT = "DELETE FROM course_student "
+                + "WHERE course_id IN (SELECT cid FROM course WHERE cid = ?) AND student_id = ?;";
         jdbcTemplate.update(SQL_DELETE_COURSE_STUDENT, courseId, studentId);
 
         //YOUR CODE ENDS HERE
